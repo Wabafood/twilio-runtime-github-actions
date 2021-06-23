@@ -6,7 +6,7 @@ name: Twilio CI
 # events but only for the master branch
 on:
   push:
-    branches: [ main ]
+    branches: [ stage ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,4 +32,4 @@ jobs:
          TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
          TWILIO_API_SECRET: ${{secrets.TWILIO_API_SECRET}}
         # Install the Twilio CLI and the serverless plugin then deploy the function
-        run: npm install twilio-cli -g && twilio plugins:install @twilio-labs/plugin-serverless && twilio serverless:deploy --service-name=wabafood-functions-production --environment=production --force
+        run: npm install twilio-cli -g && twilio plugins:install @twilio-labs/plugin-serverless && twilio serverless:deploy --service-name=wabafood-functions-stage --environment=stage --force
