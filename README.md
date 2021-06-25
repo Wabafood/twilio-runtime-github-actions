@@ -130,6 +130,4 @@ Por fim entre novamente na página do Github Actions para revisar se está tudo 
 
 [Github Actions](https://github.com/Wabafood/wabafood-functions/actions)
 
-___
-
 **Pronto, o controle de versão está feito**
