@@ -7,9 +7,15 @@
     "start": "twilio-run --env"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "request": "^2.88.2",
+    "should": "^13.2.3",
     "twilio-run": "^2.0.0"
   },
   "engines": {
-    "node" : ">=8.0.0 <11.0.0" 
+    "node": ">=8.0.0 <11.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
   }
 }
