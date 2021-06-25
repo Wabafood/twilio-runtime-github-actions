@@ -1,102 +1,133 @@
-# CI/CD for Twilio Functions with GitHub Actions
+# Tutorial
 
-This is a template for a Github Actions workflow that deploys Twilio Runtime functions and assets when code changes are pushed to a Github repository.
+**Esse tutorial existe, caso surja uma dúvida em relação a alguma funcionalidade do `git` do Wabafood**
+## Passos para realizar o controle de versão caso você nunca tenha clonado o repositório:
 
-> NOTE: You'll need a [Twilio Account](https://twilio.com) and a [Github Account](https://github.com) to complete the following steps.
+1. Clone o repositório
 
-## Tutorial
-
-<a href="https://youtu.be/g5TbMMdlxLs"><img src="./assets/cover.png" alt="CI/CD for Twilio Functions with GitHub Actions" height="480" /></a>
-
-## STEPS
-
-1. [Fork this repository on github](https://github.com/dabblelab/twilio-runtime-github-actions/fork)
-2. Get your Twilio Account SID, API Key, and API Secret
-3. Add `TWILIO_ACCOUNT_SID`, `TWILIO_API_KEY`, `TWILIO_API_SECRET` secrets in Github
-4. Review the Github Actions Flow
-5. Push changes to test the Actions Flow
-
-## Getting your Twilio Account SID, API Key, and API Secret
-
-1. Login to the [Twilio Console](https://www.twilio.com/console)
-2. Note your Account SID is located on the right-side of the console dashboard
-3. [Create a new API Key](https://www.twilio.com/console/project/api-keys/create)
-    - Give the key a name and leave the key type as `Standard`
-    - Copy the `SID` (which is the API Key value)
-    - Copy the `SECRET`
-
-    > IMPORTANT: After clicking the 'Done' button you will no longer be able to access the SECRET value.
-
-## Add `TWILIO_ACCOUNT_SID`, `TWILIO_API_KEY`, `TWILIO_API_SECRET` secrets in Github
-
-You'll need to provide an `Account SID`, `API Key`, and `API Secret` that Github can use to access your Twilio account. To do that you'll setup secrets for the repository. 
-
-1. Go to the repository settings for the forked repo
-2. Click the `Secrets` link
-3. Add three new secrets using the names in the table below.
-
-|Name               |Value               |
-|-------------------|--------------------|
-|TWILIO_ACCOUNT_SID |Twilio Account SID  |
-|TWILIO_API_KEY     |Twilio API Key      |
-|TWILIO_API_SECRET  |Twilio API Secret   |
-
-> NOTE: The secret values are used by the Actions workflow.
-
-## Review the Github Actions Flow
-The Github Actions Flow is located in `.github/workflows/main.yml`. This is a text file in [YAML Format](https://en.wikipedia.org/wiki/YAML) that defines when the workflow is triggered and the job it will perform. 
-The parts to note in the file are:
-
-1. The workflow is triggered when code is pushed to the master branch.
-
-```yaml
-on:
-  push:
-    branches: [ master ]
+```bash
+git clone https://github.com/Wabafood/wabafood-functions
 ```
 
-2. This workflow contains a single job called "build" that runs using the `ubuntu-latest` job runner.
+> IMPORTANTE: Caso não tenha o git instalado use o link abaixo:
 
-```yaml
-jobs:
-  build:
-    runs-on: ubuntu-latest
+[Installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+Par checar se está tudo certo com a instalação rode o comando abaixo no seu terminal:
+
+```bash
+git --version
 ```
 
-3. Within the job, there are three steps. The first step sets up Node.js. The second step installs npm dependancies, and the final step installs the Twilio CLI with the required CLI plugin, then deploys the code.
+2. Instale todas as dependências do `npm`
 
-4. The last step install the Twilio CLI and the serverless plugin then uses the secrets we setup to deploy our code.
-
-```yaml
-      - name: Install twilio cli and run deploy command
-        env:
-         TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-         TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
-         TWILIO_API_SECRET: ${{secrets.TWILIO_API_SECRET}}
-        run: npm install twilio-cli -g && twilio plugins:install @twilio-labs/plugin-serverless && twilio serverless:deploy --force
-```
-## Push changes to test the flow
-
-At this point you can simply push code changes to trigger the workflow.
-
-To test this:
-
-1. clone your repository to your local computer. 
-
-```
-git clone {your-github-repo-url}
+```bash
+npm install
 ```
 
-2. open the `functions/hello-world.js` file and change the message "Hello World" to "Hello Universe!". 
+> IMPORTANTE: Caso não tenha o npm ou NodeJs instalado use o link abaixo:
 
-3. Commit and push the change.
+Par checar se está tudo certo com a instalação rode o comando abaixo no seu terminal:
 
+```bash
+node --version
+
+# e rode também
+
+npm --version
 ```
+
+[Instaling NodeJs](https://nodejs.org/en/download/)
+
+3. Após esses passos, troque da branch `main` para a branch `test`
+
+```bash
+git checkout test
+```
+
+4. Entre na pasta functions para alterar as funções do Twilio e faça suas alterações
+
+> IMPORTANTE: Não altere os arquivos da página .github/workflows:
+
+5. Após realizar suas alterações você deve seguir os passos abaixo para dar upload de suas alterações no Github:
+
+```bash
+# adicionando todas as alterações feitas
 git add .
-git commit -m "update hello-world.js"
-git push
+
+#deixando avisado qual alteração foi feita
+git commit -m "ESCREVA AQUI UM COMENTÁRIO SOBRE SUA ALTERAÇÃO"
+
 ```
 
-> NOTE: If you open the repository page in your web browser and view the actions tab you should notice the workflow has been triggered.
+6. **Passo mais importante, mandar o código para a branch `test`**
 
-4. After the job completes (1-2 minutes usually) login to your Twilio Console and view [services in your functions console](https://www.twilio.com/console/functions/overview/services), you should now see a new service named `twilio-runtime-github-actions`.
+```bash
+git push origin test
+```
+
+___
+
+## Checando alterações na Twilio e no Github:
+
+[Github Actions](https://github.com/Wabafood/wabafood-functions/actions)
+
+Espere até que apareça o check verde, caso apareça o check vermelho, tente fazer uma alteração mínima no código e seguir os passos **5 e 6** citados anteriormente.
+
+Caso tenha dado tudo certo, vá até as Functions do serviço de `test` do Twilio e veja se foram adicionadas suas alterações:
+
+[Twilio Functions](https://www.twilio.com/console/functions/overview/services)
+
+___
+
+## Subindo versão de Stage (Test -> Stage)
+
+Após realizar os testes no ambiente `test` vamos agora subir as alterações feitas para o ambiente de stage, para isso vá até a página de Pull Requests do Github:
+
+[Pull Requests](https://github.com/Wabafood/wabafood-functions/pulls)
+
+Nessa página você deve clicar no botão verde **Compare & Pull Request** no canto superior direito, caso ele não apareça você deve clicar em **New Pull Request**
+
+Ao criar-se o pull request você deve comparar os ambientes em que está trabalhando.
+
+> **Lembre-se de sempre comparar o `base repository` chamado `Wabafood/wabafood-functions`**
+
+Após isso você deve selecionar a branch base como **stage** e a branch compare como **test**, pois você está mandando o código alterado na branch `test` para a branch `stage`.
+
+Agora clique em **Create Pull Request** e assim o pull request estará criado.
+
+Caso não haja conflitos no código clique em **Merge Pull Request**, assim o código teste estará combinado ao código de stage.
+
+**Caso haja conflito no código chame a gente [Slack](wabafood.slack.com)**
+
+Por fim entre novamente na página do Github Actions para revisar se está tudo correto com o código para que ele suba para o Twilio:
+
+[Github Actions](https://github.com/Wabafood/wabafood-functions/actions)
+
+___
+
+## Subindo versão de Production (Stage -> Production(main))
+
+Após realizar os testes no ambiente `stage` vamos agora subir as alterações feitas para o ambiente de production, para isso vá até a página de Pull Requests do Github:
+
+[Pull Requests](https://github.com/Wabafood/wabafood-functions/pulls)
+
+Nessa página você deve clicar no botão verde **Compare & Pull Request** no canto superior direito, caso ele não apareça você deve clicar em **New Pull Request**
+
+Ao criar-se o pull request você deve comparar os ambientes em que está trabalhando.
+
+> **Lembre-se de sempre comparar o `base repository` chamado `Wabafood/wabafood-functions`**
+
+Após isso você deve selecionar a branch base como **main** e a branch compare como **stage**, pois você está mandando o código alterado na branch `stage` para a branch `main (production)`.
+
+Agora clique em **Create Pull Request** e assim o pull request estará criado.
+
+Caso não haja conflitos no código clique em **Merge Pull Request**, assim o código stage estará combinado ao código de produção.
+
+**Caso haja conflito no código chame a gente [Slack](wabafood.slack.com)**
+
+Por fim entre novamente na página do Github Actions para revisar se está tudo correto com o código para que ele suba para o Twilio:
+
+[Github Actions](https://github.com/Wabafood/wabafood-functions/actions)
+
+**Pronto, o controle de versão está feito**
